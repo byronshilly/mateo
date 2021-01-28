@@ -32,6 +32,7 @@
 
 1. Create a PSQL database and user.
 2. In the `/mateo` directory, create a file called `.env`. Populate it with the following:
+
    ```
    SQLALCHEMY_DATABASE_URI="postgresql://<username>:<password>@localhost:5432/<database_name>"
    ```
