@@ -14,6 +14,8 @@ from .utils import (
 )
 
 
+
+
 @v1_registry.handles(
     rule='/user/<uuid:user_id>',
     method='GET',
@@ -24,8 +26,9 @@ def get_user(user_id: UUID):
     if user is None:
         raise errors.NotFound()
 
-    print(user)
     return user
+
+
 
 @v1_registry.handles(
     rule='/user',
