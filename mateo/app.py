@@ -7,7 +7,7 @@ from mateo.config import Config
 
 # Flask Rebar 
 rebar = Rebar() 
-registry = rebar.create_handler_registry(prefix='/api/v1/')
+v1_registry = rebar.create_handler_registry(prefix='/api/v1/')
 
 # Database
 db = SQLAlchemy()
