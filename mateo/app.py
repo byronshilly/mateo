@@ -5,8 +5,11 @@ from flask_migrate import Migrate
 
 from mateo.config import Config
 
+# Flask Rebar 
 rebar = Rebar() 
-registry = rebar.create_handler_registry(prefix='/api')
+registry = rebar.create_handler_registry(prefix='/api/v1/')
+
+# Database
 db = SQLAlchemy()
 migrate = Migrate(db=db)
 
@@ -17,8 +20,6 @@ def create_app():
     rebar.init_app(app) 
     db.init_app(app)
     migrate.init_app(app)
-
-    # print(app.config)
 
     return app 
 
