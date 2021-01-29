@@ -21,6 +21,7 @@ Response schemas
 class UserSchema(ResponseSchema):
     id = fields.String()
     email = fields.String()
+    username = fields.String()
 
 
 
@@ -34,3 +35,5 @@ class UserByIdSchema(RequestSchema):
 
 class CreateUserSchema(RequestSchema):
     email = fields.String(required=True)
+    username = fields.String(required=True)
+    password = fields.String(required=True)

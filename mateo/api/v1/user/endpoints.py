@@ -18,7 +18,6 @@ from .utils import (
 )
 
 
-
 @v1_registry.handles(
     rule='/user/<uuid:user_id>',
     method='GET',
@@ -30,8 +29,6 @@ def get_user(user_id):
     if not user:
         raise errors.NotFound(msg=ResponseMessages.USER_DOESNT_EXIST)
 
-    print(current_identity.id)
-
     return user
 
 
@@ -41,7 +38,6 @@ def get_user(user_id):
     request_body_schema=CreateUserSchema(),
     response_body_schema={201: UserSchema()}
 )
-@jwt_required()
 def create_user():
     body = rebar.validated_body
 

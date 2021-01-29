@@ -11,3 +11,5 @@ class User(db.Model):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     email = Column(String(64), unique=True, nullable=False)
+    username = Column(String(64), unique=True, nullable=False)
+    password = Column(String(1024), nullable=False)

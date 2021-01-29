@@ -1,3 +1,5 @@
+import bcrypt
+
 from mateo.app import db
 from mateo.models.user import User
 
@@ -15,6 +17,8 @@ def _get_user_by_email(email):
 
 def _create_user(body):
     user = User(**body) 
+
+    user.password = bcrypt.hashpw(user.password, bcrypt.gensalt())
 
     db.session.add(user)
     db.session.commit()

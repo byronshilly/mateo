@@ -1,3 +1,5 @@
+import bcrypt
+
 from  mateo.models.user import User
 
 """
@@ -12,9 +14,10 @@ class UserId(object):
         self.id = str(id)
 
 def authenticate(username, password):
-    user = User.query.filter_by(id=username).first()
-    user_id = UserId(user.id)
-    return user_id
+    user = User.query.filter_by(username=username).first()
+    if user and bcrypt.checkpw(password, user.password):
+        user_id = UserId(user.id)
+        return user_id
 
 def identity(payload):
     user_id = payload['identity']
