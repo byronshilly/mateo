@@ -2,17 +2,21 @@ from flask_rebar import errors
 
 from uuid import UUID
 
-from mateo.app import v1_registry, db, rebar
+from mateo.app import v1_registry, rebar
 from mateo.models.user import User 
 from mateo.schemas.user import (
+    ResponseMessages,
     UserSchema,
-    CreateUserSchema
+    UserByIdSchema,
+    CreateUserSchema,
 )
 
 from .utils import (
-    _create_user
+    _get_user,
+    _get_user_by_email,
+    _create_user,
+    _delete_user
 )
-
 
 
 
@@ -22,22 +26,45 @@ from .utils import (
     response_body_schema=UserSchema()
 )
 def get_user(user_id: UUID):
-    user = User.query.filter_by(id=user_id).first()
-    if user is None:
-        raise errors.NotFound()
+    user = _get_user(user_id)
+    if not user:
+        raise errors.NotFound(msg=ResponseMessages.USER_DOESNT_EXIST)
 
     return user
-
 
 
 @v1_registry.handles(
     rule='/user',
     method='POST',
     request_body_schema=CreateUserSchema(),
-    response_body_schema=UserSchema()
+    response_body_schema={201: UserSchema()}
 )
 def create_user():
     body = rebar.validated_body
-    user = _create_user(body)
-    return user
 
+    # Check if the email is taken
+    user = _get_user_by_email(body['email'])
+    if user: 
+        raise errors.Conflict(msg=ResponseMessages.USER_ALREADY_EXISTS)
+
+    user = _create_user(body)
+    return (user, 201)
+
+
+@v1_registry.handles(
+    rule='/user',
+    method='DELETE',
+    request_body_schema=UserByIdSchema()
+)
+def delete_user():
+    body = rebar.validated_body
+
+    user = _get_user(body['id'])
+    if not user:
+        raise errors.NotFound(msg=ResponseMessages.USER_DOESNT_EXIST)
+
+    # Will return true if successful
+    if not _delete_user(body['id']):
+        raise errors.InternalError(msg=ResponseMessages.COULDNT_DELETE_USER)
+
+    return "", 204 
