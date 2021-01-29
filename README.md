@@ -42,5 +42,6 @@
 
 1. Create a file for the table in the models directory, defining all of it's columns.
 2. Create a file for the table in the schema directory, defining how to serialize its objects.
-2. Run `flask db migrate -m "migration details"`. 
-3. Run `flask db upgrade`.
+3. Import the model in the base `__init__.py` file.
+4. Run `flask db migrate -m "migration details"`. 
+5. Run `flask db upgrade`.

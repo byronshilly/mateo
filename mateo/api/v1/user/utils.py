@@ -23,10 +23,6 @@ def _create_user(body):
     
 
 def _delete_user(user_id):
-    """
-    Return true if successful, false otherwise (no error paths currently). 
-
-    """
     user = User.query.filter_by(id=user_id).first()
 
     db.session.delete(user)

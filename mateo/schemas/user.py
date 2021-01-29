@@ -13,6 +13,7 @@ class ResponseMessages:
     COULDNT_DELETE_USER = "Something went wrong. This user couldn't be deleted."
 
 
+
 """
 Response schemas
 
@@ -28,7 +29,7 @@ Request schemas
 
 """
 class UserByIdSchema(RequestSchema):
-    id = fields.String()
+    id = fields.String(required=True)
 
 
 class CreateUserSchema(RequestSchema):

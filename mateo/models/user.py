@@ -1,11 +1,13 @@
-from sqlalchemy import Column, Text
+from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 
 from mateo.app import db
 
+
+
 class User(db.Model):
     __tablename__ = 'users'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    email = Column(Text(), unique=True, nullable=False)
+    email = Column(String(64), unique=True, nullable=False)
