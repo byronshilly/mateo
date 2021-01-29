@@ -2,18 +2,24 @@ from flask import Flask
 from flask_rebar import Rebar
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt import JWT
 
 from mateo.config import Config
+
+
 
 # Flask Rebar 
 rebar = Rebar() 
 v1_registry = rebar.create_handler_registry(prefix='/api/v1/')
 
+
 # Database
 db = SQLAlchemy()
 migrate = Migrate(db=db)
 
-def create_app(): 
+
+# Application bootstrapping
+def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -21,7 +27,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app)
 
-    return app 
+    from .auth import authenticate, identity
+    jwt = JWT(app, authenticate, identity)
 
-if __name__ == '__main__':
-    create_app().run()
+    return app

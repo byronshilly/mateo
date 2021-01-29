@@ -1,4 +1,5 @@
 from flask_rebar import errors
+from flask_jwt import jwt_required
 
 from mateo.app import v1_registry, rebar
 from mateo.models.game import Game
@@ -23,6 +24,7 @@ from .utils import (
     method='GET',
     response_body_schema=GameSchema()
 )
+@jwt_required()
 def get_game(game_id):
     game = _get_game(game_id)
     if not game:
@@ -37,6 +39,7 @@ def get_game(game_id):
     request_body_schema=CreateGameSchema(),
     response_body_schema={201: GameSchema()}
 )
+@jwt_required()
 def create_game():
     body = rebar.validated_body
 
@@ -54,6 +57,7 @@ def create_game():
     method='DELETE',
     request_body_schema=GameByIdSchema()
 )
+@jwt_required()
 def delete_game():
     body = rebar.validated_body
 

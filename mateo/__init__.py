@@ -1,5 +1,7 @@
 from mateo.app import create_app
 
+
+
 # Need to import models for Flask-Migrate to pick up
 from mateo.models import (
     user,
