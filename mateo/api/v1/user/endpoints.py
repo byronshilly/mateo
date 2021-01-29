@@ -1,6 +1,5 @@
 from flask_rebar import errors
-
-from uuid import UUID
+from flask_jwt import jwt_required, current_identity
 
 from mateo.app import v1_registry, rebar
 from mateo.models.user import User 
@@ -25,7 +24,7 @@ from .utils import (
     method='GET',
     response_body_schema=UserSchema()
 )
-def get_user(user_id: UUID):
+def get_user(user_id):
     user = _get_user(user_id)
     if not user:
         raise errors.NotFound(msg=ResponseMessages.USER_DOESNT_EXIST)

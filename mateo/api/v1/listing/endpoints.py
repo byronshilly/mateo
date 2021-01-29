@@ -1,7 +1,5 @@
 from flask_rebar import errors
 
-from uuid import UUID
-
 from mateo.app import v1_registry, rebar
 from mateo.models.game import Game
 from mateo.schemas.game import (
@@ -25,7 +23,7 @@ from .utils import (
     method='GET',
     response_body_schema=GameSchema()
 )
-def get_game(game_id: UUID):
+def get_game(game_id):
     game = _get_game(game_id)
     if not game:
         raise errors.NotFound(msg=ResponseMessages.GAME_DOESNT_EXIST)

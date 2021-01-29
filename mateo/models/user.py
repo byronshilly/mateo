@@ -9,5 +9,5 @@ from mateo.app import db
 class User(db.Model):
     __tablename__ = 'users'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    id = Column(String(64), primary_key=True, default=uuid4)
     email = Column(String(64), unique=True, nullable=False)
