@@ -28,21 +28,20 @@
 - `config.py`: Stores application configuration variables. 
 - `app.py`: Flask application initialization.
 
-### Authentication
+### Authentication and Authorization
 
 Mateo requires two authentication mechanisms: 
 
 - **User Authentication:** User login and session preservation. For this we use Flask-JWT. To log a user in, the frontend will 
   call the `/auth` endpoint. If the username/password combination is correct, the endpoint will return a JWT that the frontend will 
-  store for all subsequent requests. This token allows the backend to know what user is making a particular request. This token
+  store and use for all subsequent requests. This token allows the backend to know what user is making a particular request. This token
   also doubles as an authorization mechanism, ensuring that only users on our frontend can make requests to our backend.
   However, there are a few requests that need to come from our frontend without a user in place (e.g. user creation on sign up).
   For these cases, the mechanism described in the next bullet point is needed.
-- **API Authorization (Not yet implmented):** Requests to our API should only be serviced if they are coming from our frontend 
-  application, and should deny any requests from third-parties. This can be accomplished in one of two ways: 
+- **API Authorization (Not yet implemented):** Requests to our API should only be serviced if they are coming from our frontend 
+  application, and should deny any requests from third-parties. This can be accomplished in one of two ways and is yet to be decided: 
     - Using a user authentication token (described in the first bullet point) with a preexisting user account owned by us.
-    - Using flask-rebar to authenticate with a different key/token. 
-  This is yet to be decided.
+    - Using flask-rebar to authenticate with a different key/token.
   
 
 ### Local deployment 
