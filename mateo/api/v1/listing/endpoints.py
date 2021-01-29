@@ -2,72 +2,81 @@ from flask_rebar import errors
 from flask_jwt import jwt_required
 
 from mateo.app import v1_registry, rebar
-from mateo.models.game import Game
-from mateo.schemas.game import (
+from mateo.models.listing import Listing
+from mateo.schemas.listing import (
     ResponseMessages,
-    GameSchema,
-    GameByIdSchema,
-    CreateGameSchema
+    ListingSchema,
+    ListingByIdSchema,
+    ListingBySellerIdSchema,
+    CreateListingSchema
 )
 
 from .utils import (
-    _get_game,
-    _get_game_by_title_and_platform,
-    _create_game,
-    _delete_game
+    _get_listing,
+    _get_listings_by_seller,
+    _create_listing,
+    _delete_listing
 )
 
 
 
 @v1_registry.handles(
-    rule='/game/<uuid:game_id>',
+    rule='/listing/<uuid:listing_id>',
     method='GET',
-    response_body_schema=GameSchema()
+    response_body_schema=ListingSchema()
 )
 @jwt_required()
-def get_game(game_id):
-    game = _get_game(game_id)
-    if not game:
-        raise errors.NotFound(msg=ResponseMessages.GAME_DOESNT_EXIST)
+def get_listing(listing_id):
+    listing = _get_listing(listing_id)
+    if not listing:
+        raise errors.NotFound(msg=ResponseMessages.LISTING_DOESNT_EXIST)
 
-    return game
+    return listing
 
 
 @v1_registry.handles(
-    rule='/game',
+    rule='/listing',
+    method='GET',
+    request_body_schema=ListingBySellerIdSchema(),
+    response_body_schema=ListingSchema(many=True)
+)
+@jwt_required()
+def get_listings():
+    body = rebar.validated_body
+
+    listings = _get_listings_by_seller(body['seller_id'])
+    return listings
+
+
+@v1_registry.handles(
+    rule='/listing',
     method='POST',
-    request_body_schema=CreateGameSchema(),
-    response_body_schema={201: GameSchema()}
+    request_body_schema=CreateListingSchema(),
+    response_body_schema={201: ListingSchema()}
 )
 @jwt_required()
-def create_game():
+def create_listing():
     body = rebar.validated_body
-
-    # Check if the game already exists
-    game = _get_game_by_title_and_platform(body['title'], body['platform'])
-    if game:
-        raise errors.Conflict(msg=ResponseMessages.GAME_ALREADY_EXISTS)
-
-    game = _create_game(body)
-    return (game, 201)
+    listing = _create_listing(body)
+    return (listing, 201)
 
 
 @v1_registry.handles(
-    rule='/game',
+    rule='/listing',
     method='DELETE',
-    request_body_schema=GameByIdSchema()
+    request_body_schema=ListingByIdSchema()
 )
 @jwt_required()
-def delete_game():
+def delete_listing():
     body = rebar.validated_body
 
-    game = _get_game(body['id'])
-    if not game:
-        raise errors.NotFound(msg=ResponseMessages.GAME_DOESNT_EXIST)
+    listing = _get_listing(body['id'])
+    if not listing:
+        raise errors.NotFound(msg=ResponseMessages.LISTING_DOESNT_EXIST)
 
     # Will return true if successful
-    if not _delete_game(body['id']):
-        raise errors.InternalError(msg=ResponseMessages.COULDNT_DELETE_GAME)
+    if not _delete_listing(body['id']):
+        raise errors.InternalError(msg=ResponseMessages.COULDNT_DELETE_LISTING)
 
     return "", 204
 

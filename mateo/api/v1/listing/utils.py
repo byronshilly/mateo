@@ -1,31 +1,35 @@
+from flask_jwt import current_identity as current_user
+
 from mateo.app import db
-from mateo.models.game import Game
+from mateo.models.listing import Listing
 
 
 
-def _get_game(game_id):
-    game = Game.query.filter_by(id=game_id).first()
-    return game
+def _get_listing(listing_id):
+    listing = Listing.query.filter_by(id=listing_id).first()
+    return listing
 
 
-def _get_game_by_title_and_platform(title, platform):
-    game = Game.query.filter_by(title=title, platform=platform).first()
-    return game
+def _get_listings_by_seller(seller_id):
+    listings = Listing.query.filter_by(seller_id=seller_id).all()
+    return listings
 
 
-def _create_game(body):
-    game = Game(**body)
+def _create_listing(body):
+    listing = Listing(**body)
+    listing.seller_id = current_user.id
+    listing.status = "LISTED"
 
-    db.session.add(game)
+    db.session.add(listing)
     db.session.commit()
 
-    return game
+    return listing
 
 
-def _delete_game(game_id):
-    game = Game.query.filter_by(id=game_id).first()
+def _delete_listing(listing_id):
+    listing = Listing.query.filter_by(id=listing_id).first()
 
-    db.session.delete(game)
+    db.session.delete(listing)
     db.session.commit()
 
     return True

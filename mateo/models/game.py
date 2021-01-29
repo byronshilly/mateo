@@ -14,4 +14,3 @@ class Game(db.Model):
     title = Column(String(256), unique=False, nullable=False)
     platform = Column(String(64), unique=False, nullable=False)
     image = Column(String(1024), unique=False, nullable=True)
-    listing_count = Column(Integer(), unique=False, nullable=False, default=0)

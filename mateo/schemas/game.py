@@ -23,7 +23,6 @@ class GameSchema(ResponseSchema):
     title = fields.String()
     platform = fields.String()
     image = fields.Url(allow_none=True)
-    listing_count = fields.Integer()
 
 
 
@@ -44,4 +43,3 @@ class CreateGameSchema(RequestSchema):
     title = fields.String(required=True)
     platform = fields.String(required=True)
     image = fields.Url(required=False, default=None)
-    listing_count = fields.Integer(0)

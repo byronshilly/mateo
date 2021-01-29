@@ -20,9 +20,9 @@ Response schemas
 class ListingSchema(ResponseSchema):
     id = fields.String()
     game_id = fields.String()
-    price = fields.Decimal(places=2)
+    price = fields.Number()
     seller_id = fields.String()
-    buyer_id = fields.String()
+    buyer_id = fields.String(allow_none=True)
     status = fields.String()
 
 
@@ -33,14 +33,12 @@ Request schemas
 """
 class ListingByIdSchema(RequestSchema):
     id = fields.String(required=True)
+
+
+class ListingBySellerIdSchema(RequestSchema):
+    seller_id = fields.String(required=True)
     
 
 class CreateListingSchema(RequestSchema):
     game_id = fields.String(required=True)
     price = fields.Decimal(places=2)
-
-    
-    title = fields.String(required=True)
-    platform = fields.String(required=True)
-    image = fields.Url(required=False, default=None)
-    listing_count = fields.Integer(0)
