@@ -45,6 +45,8 @@ def get_listings():
     body = rebar.validated_body
 
     listings = _get_listings_by_seller(body['seller_id'])
+    if not listings: 
+        raise errors.NotFound(msg=ResponseMessages.USER_HAS_NO_LISTINGS)
     return listings
 
 
