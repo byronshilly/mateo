@@ -6,7 +6,8 @@ from mateo.app import create_app
 from mateo.models import (
     user,
     game,
-    listing
+    listing,
+    shipment
 )
 
 # Need to import endpoints for Flask-Rebar to pick up

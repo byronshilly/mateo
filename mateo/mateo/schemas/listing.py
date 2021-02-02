@@ -25,6 +25,8 @@ class ListingSchema(ResponseSchema):
     seller_id = fields.String()
     buyer_id = fields.String(allow_none=True)
     status = fields.String()
+    b_shipment_id = fields.String(allow_none=True)
+    s_shipment_id = fields.String(allow_none=True)
 
 
 

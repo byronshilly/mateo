@@ -15,7 +15,6 @@ class Listing(db.Model):
     seller_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     buyer_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=True)
     status = Column(String(64), nullable=False)
-    # BYRON - Need to uncomment once the shipment table is created
-    # s_shipment_id = Column(UUID(as_uuid=True), ForeignKey('shipment.id'), nullable=True)
-    # b_shipment_id = Column(UUID(as_uuid=True), ForeignKey('shipment.id'), nullable=True)
+    s_shipment_id = Column(UUID(as_uuid=True), ForeignKey('shipments.id'), nullable=True)
+    b_shipment_id = Column(UUID(as_uuid=True), ForeignKey('shipments.id'), nullable=True)
 
