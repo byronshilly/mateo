@@ -14,5 +14,6 @@ from mateo.models import (
 from mateo.api.v1 import (
     user,
     game,
-    listing
+    listing,
+    shipment
 )

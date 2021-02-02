@@ -14,3 +14,4 @@ class Shipment(db.Model):
     shipment_type = Column(Enum(ShipmentType), nullable=False) 
     from_addr = Column(String(1024), nullable=True)
     to_addr = Column(String(1024), nullable=True)
+
