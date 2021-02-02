@@ -1,5 +1,5 @@
 from flask_rebar import errors
-from flask_jwt import jwt_required
+from flask_jwt import jwt_required, current_identity as current_user
 
 from mateo.app import v1_registry, rebar
 from mateo.models.listing import Listing
@@ -118,8 +118,10 @@ Will be used for:
 def modify_listing(listing_id):
     body = rebar.validated_body
 
-    listing = _modify_listing(listing_id, body) 
-    if not listing: 
+    listing = _get_listing(listing_id)
+    if not listing:
         raise errors.NotFound(msg=ResponseMessages.LISTING_DOESNT_EXIST)
+    if listing.seller_id != current_user.id:
+        raise errors.Unauthorized(msg=ResponseMessages.LISTING_UNAUTHORIZED)
 
-    return listing
+    return _modify_listing(listing, body) 

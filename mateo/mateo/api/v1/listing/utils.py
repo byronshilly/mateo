@@ -35,11 +35,7 @@ def _delete_listing(listing_id):
     return True
 
 
-def _modify_listing(listing_id, body):
-    listing = _get_listing(listing_id)
-    if not listing:
-        return None
-
+def _modify_listing(listing, body):
     for key in body:
         setattr(listing, key, body[key]) 
 

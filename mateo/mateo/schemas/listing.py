@@ -11,6 +11,7 @@ class ResponseMessages:
     LISTING_DOESNT_EXIST = "This listing doesn't exist."
     COULDNT_DELETE_LISTING = "Something went wrong. This listing couldn't be deleted."
     USER_HAS_NO_LISTINGS = "No listings were found for this user."
+    LISTING_UNAUTHORIZED = "You are not authorized to modify this listing."
 
 
 
