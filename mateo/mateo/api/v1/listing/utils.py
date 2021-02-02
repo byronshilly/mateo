@@ -33,3 +33,17 @@ def _delete_listing(listing_id):
     db.session.commit()
 
     return True
+
+
+def _modify_listing(listing_id, body):
+    listing = _get_listing(listing_id)
+    if not listing:
+        return None
+
+    for key in body:
+        setattr(listing, key, body[key]) 
+
+    db.session.add(listing)
+    db.session.commit()
+
+    return listing

@@ -45,3 +45,10 @@ class ListingBySellerIdSchema(RequestSchema):
 class CreateListingSchema(RequestSchema):
     game_id = fields.String(required=True)
     price = fields.Decimal(places=2)
+
+class ModifyListingSchema(RequestSchema):
+    price = fields.Number()
+    buyer_id = fields.String()
+    status = fields.String()
+    b_shipment_id = fields.String()
+    s_shipment_id = fields.String()

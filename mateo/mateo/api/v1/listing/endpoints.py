@@ -8,18 +8,23 @@ from mateo.schemas.listing import (
     ListingSchema,
     ListingByIdSchema,
     ListingBySellerIdSchema,
-    CreateListingSchema
+    CreateListingSchema,
+    ModifyListingSchema
 )
 
 from .utils import (
     _get_listing,
     _get_listings_by_seller,
     _create_listing,
-    _delete_listing
+    _delete_listing,
+    _modify_listing
 )
 
 
+"""
+Get a listing 
 
+"""
 @v1_registry.handles(
     rule='/listing/<uuid:listing_id>',
     method='GET',
@@ -34,6 +39,10 @@ def get_listing(listing_id):
     return listing
 
 
+"""
+Get all listings for a user
+
+"""
 @v1_registry.handles(
     rule='/listing',
     method='GET',
@@ -50,6 +59,10 @@ def get_listings():
     return listings
 
 
+"""
+Create a new listing 
+
+"""
 @v1_registry.handles(
     rule='/listing',
     method='POST',
@@ -63,6 +76,10 @@ def create_listing():
     return (listing, 201)
 
 
+"""
+Delete a listing 
+
+"""
 @v1_registry.handles(
     rule='/listing',
     method='DELETE',
@@ -82,3 +99,27 @@ def delete_listing():
 
     return "", 204
 
+
+"""
+Update a listing's properties
+
+Will be used for:
+    - Marking a listing as sold by appending a buyer ID 
+    - Marking a listing as shipped by appending shipment IDs
+
+"""
+@v1_registry.handles(
+    rule='/listing/<uuid:listing_id>',
+    method='PATCH',
+    request_body_schema=ModifyListingSchema(),
+    response_body_schema=ListingSchema()
+)
+@jwt_required()
+def modify_listing(listing_id):
+    body = rebar.validated_body
+
+    listing = _modify_listing(listing_id, body) 
+    if not listing: 
+        raise errors.NotFound(msg=ResponseMessages.LISTING_DOESNT_EXIST)
+
+    return listing
