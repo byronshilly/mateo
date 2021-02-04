@@ -1,4 +1,4 @@
-from flask_jwt import current_identity as current_user
+from flask_jwt_extended import get_jwt_identity
 
 from mateo.app import db
 from mateo.models.shipment import Shipment

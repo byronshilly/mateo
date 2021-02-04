@@ -1,4 +1,4 @@
-from flask_jwt import current_identity as current_user
+from flask_jwt_extended import get_jwt_identity
 
 from mateo.app import db
 from mateo.models.listing import Listing
@@ -17,7 +17,7 @@ def _get_listings_by_seller(seller_id):
 
 def _create_listing(body):
     listing = Listing(**body)
-    listing.seller_id = current_user.id
+    listing.seller_id = get_jwt_identity()
     listing.status = "LISTED"
 
     db.session.add(listing)

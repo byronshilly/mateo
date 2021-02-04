@@ -1,7 +1,7 @@
 from flask_rebar import errors
-from flask_jwt import jwt_required, current_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from mateo.app import v1_registry, rebar
+from mateo.app import rebar
 from mateo.models.user import User 
 from mateo.schemas.user import (
     ResponseMessages,
@@ -18,12 +18,15 @@ from .utils import (
 )
 
 
-@v1_registry.handles(
-    rule='/user/<uuid:user_id>',
+v1_user_registry = rebar.create_handler_registry(prefix='/api/v1/user') 
+
+
+@v1_user_registry.handles(
+    rule='/<uuid:user_id>',
     method='GET',
     response_body_schema=UserSchema()
 )
-@jwt_required()
+@jwt_required
 def get_user(user_id):
     user = _get_user(user_id)
     if not user:
@@ -32,8 +35,8 @@ def get_user(user_id):
     return user
 
 
-@v1_registry.handles(
-    rule='/user',
+@v1_user_registry.handles(
+    rule='/',
     method='POST',
     request_body_schema=CreateUserSchema(),
     response_body_schema={201: UserSchema()}
@@ -50,12 +53,12 @@ def create_user():
     return (user, 201)
 
 
-@v1_registry.handles(
-    rule='/user',
+@v1_user_registry.handles(
+    rule='/',
     method='DELETE',
     request_body_schema=UserByIdSchema()
 )
-@jwt_required()
+@jwt_required
 def delete_user():
     body = rebar.validated_body
 

@@ -1,7 +1,7 @@
 from flask_rebar import errors
-from flask_jwt import jwt_required, current_identity as current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from mateo.app import v1_registry, rebar
+from mateo.app import rebar
 from mateo.models.shipment import Shipment
 from mateo.schemas.shipment import (
     ResponseMessages,
@@ -17,16 +17,20 @@ from .utils import (
 )
 
 
+
+v1_shipment_registry = rebar.create_handler_registry(prefix='/api/v1/shipment')
+
+
 """
 Get a shipment 
 
 """
-@v1_registry.handles(
-    rule='/shipment/<uuid:shipment_id>',
+@v1_shipment_registry.handles(
+    rule='/<uuid:shipment_id>',
     method='GET',
     response_body_schema=ShipmentSchema()
 )
-@jwt_required()
+@jwt_required
 def get_shipment(shipment_id):
     shipment = _get_shipment(shipment_id)
     if not shipment:
@@ -39,13 +43,13 @@ def get_shipment(shipment_id):
 Create a new shipment 
 
 """
-@v1_registry.handles(
-    rule='/shipment',
+@v1_shipment_registry.handles(
+    rule='/',
     method='POST',
     request_body_schema=CreateShipmentSchema(),
     response_body_schema={201: ShipmentSchema()}
 )
-@jwt_required()
+@jwt_required
 def create_shipment():
     body = rebar.validated_body
     shipment = _create_shipment(body)
@@ -56,12 +60,12 @@ def create_shipment():
 Delete a shipment 
 
 """
-@v1_registry.handles(
-    rule='/shipment',
+@v1_shipment_registry.handles(
+    rule='/',
     method='DELETE',
     request_body_schema=ShipmentByIdSchema()
 )
-@jwt_required()
+@jwt_required
 def delete_shipment():
     body = rebar.validated_body
 

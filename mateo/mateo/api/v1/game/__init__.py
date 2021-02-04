@@ -1,1 +1,1 @@
-from .endpoints import *
+from .endpoints import v1_game_registry
