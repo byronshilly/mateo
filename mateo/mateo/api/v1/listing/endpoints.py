@@ -113,7 +113,7 @@ Will be used for:
 
 """
 @v1_listing_registry.handles(
-    rule='//<uuid:listing_id>',
+    rule='/<uuid:listing_id>',
     method='PATCH',
     request_body_schema=ModifyListingSchema(),
     response_body_schema=ListingSchema()

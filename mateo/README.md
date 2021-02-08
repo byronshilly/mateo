@@ -30,19 +30,53 @@
 
 ### Authentication and Authorization
 
-Mateo requires two authentication mechanisms: 
+Mateo utilizes token-based authentication using JSON Web Tokens (JWT). The frontend will use auth endpoints to 
+authenticate a user's credentials and receive tokens that can be used to make requests to protected endpoints 
+on behalf of the user. There are two tokens involved in Mateo's authentication scheme: 
 
-- **User Authentication:** User login and session preservation. For this we use Flask-JWT. To log a user in, the frontend will 
-  call the `/auth` endpoint. If the username/password combination is correct, the endpoint will return a JWT that the frontend will 
-  store and use for all subsequent requests. This token allows the backend to know what user is making a particular request. This token
-  also doubles as an authorization mechanism, ensuring that only users on our frontend can make requests to our backend.
-  However, there are a few requests that need to come from our frontend without a user in place (e.g. user creation on sign up).
-  For these cases, the mechanism described in the next bullet point is needed.
-- **API Authorization (Not yet implemented):** Requests to our API should only be serviced if they are coming from our frontend 
-  application, and should deny any requests from third-parties. This can be accomplished in one of two ways and is yet to be decided: 
-    - Using a user authentication token (described in the first bullet point) with a preexisting user account owned by us.
-    - Using flask-rebar to authenticate with a different key/token.
-  
+- Access token: The primary token used to authenticate users. Expires quickly. 
+- Refresh token: A secondary token used to receive new access tokens, rather than using the user's credentials.
+
+To login a user, a call to `POST /auth/login` with the following request body is required: 
+
+```
+{
+    'username': <username>,
+    'password': <password>
+}
+```
+
+If the credentials are correct, a response will be returned that will set two `httpOnly` cookies in the browser: 
+
+- `access_token`: Contains the token used to access protected endpoints. 
+- `refresh_token`: Used to refresh the access token after it is expired. 
+
+To protect against CSRF, CSRF tokens are also returned in the response body: 
+
+```
+{
+    'access_csrf_token': <token>,
+    'refresh_csrf_token': <token>
+}
+```
+
+Any subsequent requests to protected endpoints require that the `access_token` cookie is present, and that the 
+`access_csrf_token` value is passed in the `X-CSRF-Token` header.
+
+To refresh an access token, a call to `POST /auth/refresh` is required with the `refresh_token` cookie present, 
+and the `refresh_csrf_token` value passed via the `X-CSRF-Token` header. 
+
+While cookies are automatically passed via the browser, it is the responsibility of the frontend application to 
+save the CSRF tokens and pass them with subsequent requests accordingly: 
+
+- The `access_csrf_token` should be stored in-memory, and never persisted somewhere that would enable CSRF attacks.
+  Because of this, the token will be lost when the user restarts the browser, or when visiting the frontend on a different tab. 
+  For these cases, the `refresh_csrf_token` can be used. 
+- The `refresh_csrf_token` should be persisted somewhere, either in browser local storage, or in a cookie. Whenever 
+  authentication with the access token fails, either because the token has expired or because `access_csrf_token` is
+  not present (new tab, new browser instance), the persisted value of `refresh_csrf_token` should be passed with the
+  request to receive a new `access_token` cookie and a new `access_csrf_token` value to be stored in-memory. If the 
+  refresh token values cannot be found, the user must be loggined in again.
 
 ### Local deployment 
 
