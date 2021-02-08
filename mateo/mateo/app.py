@@ -37,8 +37,7 @@ def create_app():
     rebar.init_app(app) 
     db.init_app(app)
     migrate.init_app(app)
-    CORS(app)
-
+    CORS(app, resources={r"/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
     jwt = JWTManager(app)
 
     return app

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import wretch from "wretch";
+
+import { AuthApi } from "../../../utilities/api.js"
 
 import './style.scss';
 
@@ -7,18 +8,9 @@ import './style.scss';
 const Login = () => {
 
     useEffect(() => {
-        wretch("http://localhost:5000/auth")
-            .post({"username":"byron", "password":"Narutovpain1?"})
-            .json(response => {
-                let token = response.access_token;
-                wretch("http://localhost:5000/api/v1/user/b59574aa-47f4-484a-9924-5a5a86549055")
-                    .auth(`JWT ${ token }`)
-                    .get()
-                    .res(response => {
-                        console.log(response);
-                    });
-            });
-
+        let api = new AuthApi();
+        let result = api.login("byron", "PASSWORD");
+        console.log(result);
     });
     
     return(
