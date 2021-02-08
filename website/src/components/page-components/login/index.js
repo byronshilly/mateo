@@ -1,16 +1,13 @@
 import React, { useEffect } from "react";
 
-import { AuthApi } from "../../../utilities/api.js"
+import { AuthApi, UserApi } from "../../../utilities/api.js"
 
 import './style.scss';
 
 
 const Login = () => {
-
     useEffect(() => {
-        let api = new AuthApi();
-        let result = api.login("byron", "PASSWORD");
-        console.log(result);
+        let authApi = new AuthApi();
     });
     
     return(
