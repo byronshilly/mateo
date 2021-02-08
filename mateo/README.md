@@ -14,8 +14,9 @@
    ├── schemas
    ├── migrations
    ├── config.py
+   ├── auth.py
+   ├── extensions.py
    └── app.py
-── requirements.txt
 ```
 
 - `api`: The core logic. All endpoints will be implemented here. Endpoints are organized by API version (e.g. `v1`). 
@@ -26,6 +27,8 @@
 - `schemas`: Serializers for database objects defined in `models`. Each serializer is represented by a single file.
 - `migrations`: Used by `flask-migrate` to generate migration scripts. Leave untouched.
 - `config.py`: Stores application configuration variables. 
+- `auth.py`: Endpoints used for the authentication scheme.
+- `extensions.py`: Flask extension initialization.
 - `app.py`: Flask application initialization.
 
 ### Authentication and Authorization
