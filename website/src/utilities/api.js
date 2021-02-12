@@ -2,6 +2,7 @@ import wretch from "wretch";
 
 export class AuthApi { 
     constructor() {
+        console.log("Auth service instance created");
         this.api = wretch()
                     .url("http://localhost:5000/auth")
                     .options({ credentials: 'include' });
@@ -9,10 +10,33 @@ export class AuthApi {
     }
 
     login(username, password) {
-        return this.api.url("/login")
+        return this.api.url('/login')
             .post({'username': username, 'password': password})
-            .json(response => {
+            .unauthorized((error) => {
+                return error;
+            })
+            .json((response) => {
                 this.refreshCsrfToken = response.refresh_csrf_token;
+                return response;
+            });
+    }
+
+    logout() {
+        return this.api.url('/logout')
+            .post()
+            .json((response) => {
+                return response;
+            }); 
+    }
+
+    refresh() {
+        return this.api.url('/refresh')
+            .headers({'X-CSRF-Token': this.refreshCsrfToken})
+            .post()
+            .unauthorized((error) => {
+                return error;
+            })
+            .json((response) => {
                 return response;
             });
     }

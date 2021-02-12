@@ -3,5 +3,12 @@
  *
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
+exports.onCreatePage = async ({ page, actions }) => {
+    const { createPage } = actions
 
-// You can delete this file if you're not using it
+    if (page.path.match(/^\/dashboard/)) {
+        page.matchPath = "/dashboard/*"
+
+        createPage(page)
+    }
+}
